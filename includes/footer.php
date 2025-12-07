@@ -6,11 +6,7 @@
             <!-- Brand -->
             <div class="lg:col-span-1">
                 <a href="index.php" class="flex items-center gap-2 mb-4">
-                    <div class="bg-finders-blue p-2 rounded-lg">
-                        <svg class="w-6 h-6 text-finders-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                    </div>
+                    <img src="assets/img/FindeRS_Logo.png" alt="FindeRS Logo" class="w-10 h-10 object-contain">
                     <span class="text-xl font-bold text-finders-blue">Finde<span class="text-finders-green">RS</span></span>
                 </a>
                 <p class="text-gray-500 text-sm leading-relaxed mb-4">

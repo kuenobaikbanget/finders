@@ -22,7 +22,7 @@ $result = mysqli_query($conn, $query_sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cari Rumah Sakit - FindeRS</title>
+    <title>Cari Rumah Sakit</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/styles/style_user.css">
@@ -53,37 +53,38 @@ $result = mysqli_query($conn, $query_sql);
 
         <!-- Grid List RS -->
         <?php if (mysqli_num_rows($result) > 0): ?>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <?php while($row = mysqli_fetch_assoc($result)): ?>
-                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full overflow-hidden">
-                        <!-- Gambar Dummy (Placeholder) -->
-                        <div class="h-40 bg-gradient-to-br from-blue-50 to-blue-100 relative flex items-center justify-center">
-                            <i class="fa-solid fa-hospital text-5xl text-blue-200 group-hover:scale-110 transition-transform duration-500"></i>
-                            <div class="absolute top-3 right-3 bg-white/90 px-2 py-1 rounded-lg text-xs font-bold text-finders-green shadow-sm">
-                                <?= $row['wilayah'] ?>
-                            </div>
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full">
+                        
+                        <div class="h-48 w-full overflow-hidden rounded-t-2xl relative bg-gray-100 isolate">
+                            <img src="assets/img/<?= $row['foto'] ?>" 
+                                alt="<?= $row['nama_rs'] ?>" 
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                style="transform: translateZ(0);">
                         </div>
-
-                        <div class="p-5 flex flex-col flex-1">
-                            <h3 class="font-bold text-lg text-gray-800 mb-2 group-hover:text-finders-blue transition">
-                                <?= $row['nama_rs'] ?>
+                        
+                        <div class="p-5 flex flex-col flex-1 bg-white rounded-b-2xl">
+                            <div class="text-xs font-bold text-finders-green mb-1 uppercase tracking-wide">
+                                <?= htmlspecialchars($row['wilayah']) ?>
+                            </div>
+                            
+                            <h3 class="font-bold text-lg text-gray-800 mb-2 group-hover:text-finders-blue transition line-clamp-1">
+                                <?= htmlspecialchars($row['nama_rs']) ?>
                             </h3>
+                            
                             <p class="text-gray-500 text-sm mb-4 line-clamp-2 flex-1">
-                                <?= $row['deskripsi'] ?: 'Fasilitas kesehatan lengkap dengan pelayanan prima.' ?>
+                                <?= htmlspecialchars($row['deskripsi']) ?>
                             </p>
                             
-                            <div class="text-xs text-gray-400 mb-4 flex items-center gap-2">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <?= $row['alamat'] ?>
-                            </div>
-
-                            <div class="flex gap-2 mt-auto">
-                                <a href="rs_detail.php?id=<?= $row['id_rs'] ?>" class="flex-1 text-center py-2 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 text-sm font-medium transition">
+                            <div class="flex items-center gap-2 pt-4 border-t border-gray-100">
+                                <a href="booking.php?rs_id=<?= $row['id_rs'] ?>" class="flex-1 bg-finders-green hover:bg-green-600 text-white text-xs font-bold py-2.5 rounded-xl text-center transition uppercase tracking-wide shadow-sm flex items-center justify-center gap-2">
+                                    <i class="fa-regular fa-calendar-check"></i> Jadwalkan
+                                </a>
+                                
+                                <button onclick="openDetail(<?= $row['id_rs'] ?>)" class="flex-1 bg-blue-50 text-finders-blue text-xs font-bold py-2.5 rounded-xl hover:bg-[#1e3a8a] hover:text-white transition uppercase tracking-wide cursor-pointer shadow-sm">
                                     Detail
-                                </a>
-                                <a href="booking.php?rs=<?= $row['id_rs'] ?>" class="flex-1 text-center py-2 bg-finders-green text-white rounded-lg hover:bg-green-600 text-sm font-medium transition shadow-md hover:shadow-lg">
-                                    Booking
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -100,5 +101,17 @@ $result = mysqli_query($conn, $query_sql);
         <?php endif; ?>
 
     </main>
+
+    <!-- Modal Overlay -->
+    <div id="modalOverlay" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+
+        <div class="absolute inset-0 flex items-center justify-center p-4 overflow-y-auto">
+            <div id="modalContent" class="w-full flex justify-center">
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/script.js"></script>
 </body>
 </html>

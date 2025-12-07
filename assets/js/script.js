@@ -169,3 +169,83 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// =================================================================
+// LOGIKA MODAL DETAIL RUMAH SAKIT (POP-UP)
+// =================================================================
+
+/**
+ * Fungsi untuk membuka Modal (Floating Window)
+ * Dipanggil saat tombol "Detail" diklik
+ * @param {integer} id - ID Rumah Sakit yang ingin ditampilkan
+ */
+function openDetail(id) {
+    // 1. Ambil elemen Overlay dan Content Modal dari HTML
+    const overlay = document.getElementById('modalOverlay');
+    const content = document.getElementById('modalContent');
+    
+    // 2. Tampilkan Overlay (Hapus class 'hidden' bawaan Tailwind)
+    if (overlay) {
+        overlay.classList.remove('hidden');
+    }
+    
+    // 3. Tampilkan Animasi Loading Sementara
+    // Ini agar user tahu sistem sedang memproses data sebelum konten asli muncul
+    if (content) {
+        content.innerHTML = `
+            <div class="bg-white p-6 rounded-2xl shadow-xl flex items-center gap-3 animate-pulse">
+                <div class="w-6 h-6 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                <span class="font-medium text-gray-600">Memuat data...</span>
+            </div>
+        `;
+
+        // 4. Request Data ke Server (AJAX Fetch)
+        // Memanggil file rs_detail.php tanpa me-reload halaman
+        fetch('rs_detail.php?id=' + id)
+            .then(response => {
+                // Cek apakah koneksi sukses
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil data');
+                }
+                return response.text(); // Ubah respon menjadi teks HTML
+            })
+            .then(html => {
+                // 5. Masukkan HTML yang diterima ke dalam Modal Content
+                content.innerHTML = html;
+            })
+            .catch(err => {
+                // 6. Error Handling: Tampilkan pesan error jika gagal
+                console.error('Error:', err);
+                content.innerHTML = '<div class="bg-white p-4 rounded-xl text-red-500">Gagal memuat data. Silakan coba lagi.</div>';
+            });
+    }
+}
+
+/**
+ * Fungsi untuk menutup Modal
+ * Dipanggil saat tombol Close (X), klik background gelap, atau tekan ESC
+ */
+function closeModal() {
+    const overlay = document.getElementById('modalOverlay');
+    
+    // Sembunyikan overlay dengan menambahkan kembali class 'hidden'
+    if (overlay) {
+        overlay.classList.add('hidden');
+    }
+}
+
+// =================================================================
+// EVENT LISTENERS (PENGINTAI AKSI USER)
+// =================================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Event Listener untuk tombol Keyboard
+    document.addEventListener('keydown', function(event) {
+        // Jika user menekan tombol ESC (Escape)
+        if (event.key === "Escape") {
+            closeModal(); // Panggil fungsi tutup modal
+        }
+    });
+
+});

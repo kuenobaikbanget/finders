@@ -49,3 +49,78 @@ body {
 .animate-bounce-slow {
     animation: bounce-slow 3s infinite ease-in-out;
 }
+
+/* =================================================================
+   MODAL DETAIL RUMAH SAKIT STYLING
+   ================================================================= */
+
+/* 1. Custom Scrollbar Khusus di Dalam Modal */
+/* Agar scrollbar tidak terlalu tebal dan mengganggu desain kartu */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px; /* Lebar scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent; /* Background track transparan agar menyatu dengan putih */
+    margin-block: 10px; /* Jarak atas bawah agar tidak mentok */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #e2e8f0; /* Warna scrollbar (abu-abu muda) */
+    border-radius: 20px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: background-color 0.3s;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8; /* Warna saat di-hover (lebih gelap) */
+}
+
+/* 2. Animasi Modal Pop-Up */
+/* Efek muncul dari sedikit bawah dengan scaling, lebih natural daripada fade-in biasa */
+@keyframes modalPop {
+    0% {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.animate-modal-pop {
+    animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 3. Tombol Bookmark (Simpan) */
+.btn-bookmark {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-bookmark:hover {
+    transform: scale(1.15) rotate(5deg);
+    filter: drop-shadow(0 4px 6px rgba(239, 68, 68, 0.3)); /* Bayangan merah halus */
+}
+
+.btn-bookmark:active {
+    transform: scale(0.95);
+}
+
+/* 4. Tombol Close (X) dengan Efek Putar */
+.btn-close-modal {
+    transition: all 0.3s ease;
+}
+
+.btn-close-modal:hover {
+    background-color: #fff;
+    color: #ef4444; /* Merah */
+    transform: rotate(90deg); /* Memutar saat di-hover */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}

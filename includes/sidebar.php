@@ -1,17 +1,19 @@
-<!-- Sidebar Navigation -->
 <style>
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
+    .sidebar-preload, .sidebar-preload * {
+        transition: none !important;
     }
 </style>
-<aside class="w-20 hover:w-64 bg-finders-blue text-white flex flex-col shadow-2xl z-50 fixed h-full group/sidebar transition-[width] duration-500 ease-in-out">
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        setTimeout(function() {
+            const sidebar = document.querySelector('aside');
+            if(sidebar) sidebar.classList.remove('sidebar-preload');
+        }, 100);
+    });
+</script>
+
+<aside class="sidebar-preload w-20 hover:w-64 bg-finders-blue text-white flex flex-col shadow-2xl z-50 fixed h-full group/sidebar transition-[width] duration-500 ease-in-out">
     
     <!-- User Profile Section - Top -->
     <div class="p-3 pt-6 pb-4">

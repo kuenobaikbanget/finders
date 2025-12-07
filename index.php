@@ -209,7 +209,7 @@ include 'config/db_connect.php';
                         </h2>
                         <p class="text-blue-100 text-sm">Rekomendasi rumah sakit terbaik di sekitar Anda berdasarkan rating.</p>
                     </div>
-                    <a href="rs_daftar.php" class="text-finders-blue font-semibold text-sm hover:text-green-600 transition flex items-center gap-1 group">
+                    <a href="rs_daftar.php" class="text-white font-semibold text-sm hover:text-green-600 transition flex items-center gap-1 group">
                         Lihat Semua <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                     </a>
                 </div>
@@ -232,7 +232,7 @@ include 'config/db_connect.php';
                         </div>
                         
                         <div class="p-5 flex flex-col flex-1 bg-white rounded-b-2xl">
-                            <div class="text-xs font-bold text-finders-green mb-1 uppercase tracking-wide">
+                            <div class="text-xs font-bold text-gray-700 mb-1 uppercase tracking-wide">
                                 <?= htmlspecialchars($d['wilayah']) ?>
                             </div>
                             
@@ -244,15 +244,14 @@ include 'config/db_connect.php';
                                 <?= htmlspecialchars($d['deskripsi']) ?>
                             </p>
                             
-                            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                                <div class="flex items-center gap-1 text-yellow-500 text-sm">
-                                    <i class="fa-solid fa-star"></i>
-                                    <span class="font-bold text-gray-700">4.5</span>
-                                </div>
-                                
-                                <a href="rs_detail.php?id=<?= $d['id_rs'] ?>" class="px-4 py-2 bg-blue-50 text-finders-blue text-xs font-bold rounded-lg hover:bg-finders-blue hover:text-white transition uppercase tracking-wide">
-                                    Detail
+                            <div class="flex items-center gap-2 pt-4 border-t border-gray-100">
+                                <a href="booking.php?rs_id=<?= $d['id_rs'] ?>" class="flex-1 bg-finders-green hover:bg-green-600 text-white text-xs font-bold py-2.5 rounded-xl text-center transition uppercase tracking-wide shadow-sm flex items-center justify-center gap-2">
+                                    <i class="fa-regular fa-calendar-check"></i> Jadwalkan
                                 </a>
+                                
+                                <button onclick="openDetail(<?= $d['id_rs'] ?>)" class="flex-1 bg-blue-50 text-finders-blue text-xs font-bold py-2.5 rounded-xl hover:bg-[#1e3a8a] hover:text-white transition uppercase tracking-wide cursor-pointer shadow-sm">
+                                    Detail
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -298,5 +297,15 @@ include 'config/db_connect.php';
             </div>
         </div>
     </main>
+    <div id="modalOverlay" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+
+        <div class="absolute inset-0 flex items-center justify-center p-4 overflow-y-auto">
+            <div id="modalContent" class="w-full flex justify-center">
+                </div>
+        </div>
+    </div>
+
+    <script src="assets/js/script.js"></script>
 </body>
 </html>
