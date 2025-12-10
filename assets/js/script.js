@@ -340,3 +340,128 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// =================================================================
+// LOGIKA MODAL DETAIL KUNJUNGAN (Floating Window)
+// =================================================================
+
+/**
+ * Modal Detail Kunjungan
+ * Fungsi untuk menampilkan detail lengkap riwayat kunjungan dalam floating window
+ */
+
+/**
+ * Fungsi untuk membuka modal detail kunjungan
+ * @param {Object} data - Data riwayat kunjungan dari database
+ */
+function openDetailKunjungan(data) {
+    // Set status badge berdasarkan status kunjungan
+    let statusBadge = "bg-yellow-50 text-yellow-700 border-yellow-200";
+    let statusIcon = "fa-clock";
+    let statusText = "Menunggu Konfirmasi";
+
+    if(data.status == 'Dikonfirmasi') {
+        statusBadge = "bg-blue-50 text-blue-600 border-blue-200";
+        statusIcon = "fa-calendar-check";
+        statusText = "Jadwal Dikonfirmasi";
+    } else if(data.status == 'Selesai') {
+        statusBadge = "bg-green-50 text-green-600 border-green-200";
+        statusIcon = "fa-clipboard-check";
+        statusText = "Kunjungan Selesai";
+    } else if(data.status == 'Dibatalkan') {
+        statusBadge = "bg-red-50 text-red-600 border-red-200";
+        statusIcon = "fa-ban";
+        statusText = "Dibatalkan";
+    }
+
+    // Update status badge di modal
+    document.getElementById('modalStatus').className = "px-6 py-2 rounded-full text-sm font-bold border flex items-center gap-2 " + statusBadge;
+    document.getElementById('modalStatusIcon').className = "fa-solid " + statusIcon;
+    document.getElementById('modalStatusText').textContent = statusText;
+
+    // Set informasi rumah sakit dan layanan
+    document.getElementById('modalRsName').textContent = data.nama_rs;
+    document.getElementById('modalLayanan').textContent = data.nama_layanan;
+    document.getElementById('modalPasien').textContent = data.nama_pasien;
+    document.getElementById('modalNik').textContent = data.no_nik || '-';
+    
+    // Format tanggal kunjungan
+    const tanggal = new Date(data.tanggal_kunjungan);
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const bulan = tanggal.toLocaleDateString('id-ID', { month: 'short' });
+    const hari = tanggal.toLocaleDateString('id-ID', { weekday: 'long' });
+    
+    document.getElementById('modalTanggal').textContent = tanggal.getDate();
+    document.getElementById('modalBulan').textContent = bulan;
+    document.getElementById('modalTanggalLengkap').textContent = tanggal.toLocaleDateString('id-ID', options);
+    document.getElementById('modalHari').textContent = hari;
+
+    // Tampilkan nomor antrean dan estimasi waktu (hanya jika dikonfirmasi atau selesai)
+    if(data.status == 'Dikonfirmasi' || data.status == 'Selesai') {
+        document.getElementById('modalQueueSection').classList.remove('hidden');
+        document.getElementById('modalQueue').textContent = data.queue_number || '-';
+        document.getElementById('modalEstimasi').textContent = data.estimasi_jam || '08:00 - 10:00';
+    } else {
+        document.getElementById('modalQueueSection').classList.add('hidden');
+    }
+
+    // Set catatan
+    document.getElementById('modalCatatan').textContent = data.catatan || 'Tidak ada catatan';
+
+    // Format waktu dibuat booking
+    const dibuatPada = new Date(data.dibuat_pada);
+    document.getElementById('modalDibuatPada').textContent = dibuatPada.toLocaleDateString('id-ID', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+
+    // Tampilkan modal
+    document.getElementById('detailModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+/**
+ * Fungsi untuk menutup modal detail kunjungan
+ */
+function closeDetailModal() {
+    const modal = document.getElementById('detailModal');
+    if(modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Event listener untuk menutup modal dengan tombol ESC (sudah ada di atas, tapi kita tambahkan check untuk detailModal)
+document.addEventListener('keydown', function(e) {
+    if(e.key === 'Escape') {
+        const detailModal = document.getElementById('detailModal');
+        if(detailModal && !detailModal.classList.contains('hidden')) {
+            closeDetailModal();
+        }
+    }
+});
+
+// Prevent scroll pada body ketika modal terbuka
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('detailModal');
+    if(modal) {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if(mutation.attributeName === 'class') {
+                    if(!modal.classList.contains('hidden')) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = 'auto';
+                    }
+                }
+            });
+        });
+        
+        observer.observe(modal, {
+            attributes: true
+        });
+    }
+});

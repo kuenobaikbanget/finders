@@ -46,7 +46,7 @@ include 'config/db_connect.php';
                             <input type="text" name="keyword" required
                                 placeholder="Cari: misal 'Kanker', 'Gigi', 'Jantung'..." 
                                 class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-gray-800 placeholder-gray-500 px-4 py-3 text-base">
-                            <button type="submit" class="bg-finders-green hover:bg-green-600 text-white px-6 lg:px-8 py-3 rounded-xl font-semibold transition-all shadow-lg flex items-center gap-2 whitespace-nowrap">
+                            <button type="submit" class="bg-finders-blue hover:bg-finders-green text-white px-6 lg:px-8 py-3 rounded-xl font-semibold transition-all shadow-lg flex items-center gap-2 whitespace-nowrap">
                                 <i class="fa-solid fa-search"></i>
                                 <span class="hidden sm:inline">Cari</span>
                             </button>

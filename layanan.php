@@ -30,7 +30,7 @@ $jumlah_data = mysqli_num_rows($query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cari Layanan - FindeRS</title>
+    <title>Cari Layanan</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -54,7 +54,7 @@ $jumlah_data = mysqli_num_rows($query);
                         <input type="text" name="keyword" value="<?= htmlspecialchars($keyword) ?>"
                             placeholder="Cari layanan, dokter, atau rumah sakit..." 
                             class="w-full bg-transparent border-none focus:ring-0 text-gray-800 px-4 py-2 text-sm">
-                        <button type="submit" class="bg-finders-green hover:bg-green-600 text-white px-6 py-2 rounded-lg font-bold transition">
+                        <button type="submit" class="bg-finders-blue hover:bg-finders-green text-white px-6 py-2 rounded-lg font-bold transition-all duration-300 transform hover:scale-105">
                             Cari
                         </button>
                     </div>

@@ -84,7 +84,7 @@ $tanggal = $_GET['tgl'] ?? date('Y-m-d');
                     <i class="fa-solid fa-house"></i> Dashboard
                 </a>
                 
-                <a href="riwayat.php" class="flex-1 bg-white border-2 border-gray-200 hover:border-finders-blue text-gray-600 hover:text-finders-blue font-bold py-3 px-6 rounded-xl transition-all text-center flex items-center justify-center gap-2">
+                <a href="riwayat_pengajuan.php" class="flex-1 bg-white border-2 border-gray-200 hover:border-finders-blue text-gray-600 hover:text-finders-blue font-bold py-3 px-6 rounded-xl transition-all text-center flex items-center justify-center gap-2">
                     <i class="fa-solid fa-clock-rotate-left"></i> Riwayat
                 </a>
             </div>

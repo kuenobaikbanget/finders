@@ -87,7 +87,7 @@
         <div class="border-t border-blue-700/50 my-3"></div>
 
         <!-- Additional Menu -->
-        <a href="riwayat.php" class="flex items-center pl-5 pr-3 group-hover/sidebar:px-3 py-3 rounded-xl transition-all duration-300 relative group/item <?= $current_page === 'riwayat.php' ? 'bg-white/10 text-white' : 'text-white/80 hover:bg-blue-800/50 hover:text-white' ?>" title="Riwayat Pengajuan">
+        <a href="riwayat_pengajuan.php" class="flex items-center pl-5 pr-3 group-hover/sidebar:px-3 py-3 rounded-xl transition-all duration-300 relative group/item <?= $current_page === 'riwayat_pengajuan.php' ? 'bg-white/10 text-white' : 'text-white/80 hover:bg-blue-800/50 hover:text-white' ?>" title="Riwayat Pengajuan">
             <i class="fa-solid fa-clock-rotate-left text-lg w-6 text-center flex-shrink-0"></i>
             <span class="font-medium whitespace-nowrap overflow-hidden max-w-0 opacity-0 ml-0 group-hover/sidebar:max-w-xs group-hover/sidebar:opacity-100 group-hover/sidebar:ml-4 transition-all duration-500 ease-in-out">Riwayat Pengajuan</span>
             <!-- Tooltip -->
