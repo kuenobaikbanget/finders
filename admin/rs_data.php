@@ -249,6 +249,7 @@ $page_subtitle = "Kelola data rumah sakit terdaftar dalam sistem";
             </div>
 
         </div>
+        <?php include 'includes/footer_admin.php'; ?>
     </main>
 
     <!-- Modal Overlay -->

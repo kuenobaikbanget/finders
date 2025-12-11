@@ -264,6 +264,7 @@ $page_subtitle = "Kelola akun pengguna terdaftar";
             </div>
 
         </div>
+        <?php include 'includes/footer_admin.php'; ?>
     </main>
 
     <!-- Modal Overlay -->
