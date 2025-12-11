@@ -146,6 +146,7 @@ $page_subtitle = "Kelola semua penjadwalan kunjungan rumah sakit";
             </div>
 
         </div>
+        <?php include 'includes/footer_admin.php'; ?>
     </main>
 
     <script>

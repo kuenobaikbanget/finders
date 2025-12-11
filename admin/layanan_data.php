@@ -275,6 +275,7 @@ $page_subtitle = "Kelola layanan medis di setiap rumah sakit";
 </div>
 
 </div>
+<?php include 'includes/footer_admin.php'; ?>
 </main>
 
 <script>
