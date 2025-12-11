@@ -208,7 +208,9 @@ $page_subtitle = "Ringkasan sistem dan aktivitas terkini";
             </div>
 
         </div>
+        <?php include 'includes/footer_admin.php'; ?>
     </main>
 
 </body>
 </html>
+
