@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 12, 2025 at 09:08 AM
+-- Generation Time: Dec 12, 2025 at 11:29 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -86,7 +86,41 @@ CREATE TABLE `akun_user` (
 --
 
 INSERT INTO `akun_user` (`id_user`, `nama`, `email`, `password`, `no_telpon`, `tanggal_daftar`) VALUES
-(1, 'Budi Santoso', 'budi@example.com', '$2y$10$EQ..4Orcxtt9vKnttsmGauc4beBy5M5NVoIRCuvmmX2GDIQg1R.b6', '081234567890', '2025-12-03 14:36:32');
+(1, 'Budi Santoso', 'budi@example.com', '$2y$10$M1uVJz0bf5EYY0Np0KZ/uOqDzhY1KQMrsfZst3VmosT/CeS1wkjBW', '0812345671212', '2025-12-03 14:36:32');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `data_jadwal_layanan`
+--
+
+CREATE TABLE `data_jadwal_layanan` (
+  `id_jadwal` int(11) NOT NULL,
+  `id_layanan` int(11) NOT NULL,
+  `hari` enum('Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu') NOT NULL,
+  `jam_buka_praktek` time NOT NULL DEFAULT '08:00:00',
+  `jam_tutup_praktek` time NOT NULL DEFAULT '16:00:00',
+  `kuota_per_sesi` int(11) DEFAULT 10
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `data_jadwal_layanan`
+--
+
+INSERT INTO `data_jadwal_layanan` (`id_jadwal`, `id_layanan`, `hari`, `jam_buka_praktek`, `jam_tutup_praktek`, `kuota_per_sesi`) VALUES
+(1, 1, 'Senin', '00:00:00', '23:59:59', 20),
+(2, 1, 'Selasa', '00:00:00', '23:59:59', 20),
+(3, 1, 'Rabu', '00:00:00', '23:59:59', 20),
+(4, 1, 'Kamis', '00:00:00', '23:59:59', 20),
+(5, 1, 'Jumat', '00:00:00', '23:59:59', 20),
+(6, 1, 'Sabtu', '00:00:00', '23:59:59', 20),
+(7, 1, 'Minggu', '00:00:00', '23:59:59', 20),
+(8, 2, 'Senin', '08:00:00', '14:00:00', 20),
+(9, 2, 'Selasa', '08:00:00', '14:00:00', 20),
+(10, 2, 'Rabu', '08:00:00', '14:00:00', 20),
+(11, 2, 'Kamis', '08:00:00', '14:00:00', 20),
+(12, 2, 'Jumat', '08:00:00', '11:00:00', 15),
+(13, 2, 'Sabtu', '09:00:00', '12:00:00', 10);
 
 -- --------------------------------------------------------
 
@@ -129,6 +163,8 @@ CREATE TABLE `data_penjadwalan` (
   `no_nik` varchar(50) DEFAULT NULL,
   `nama_pasien` varchar(150) NOT NULL,
   `tanggal_kunjungan` date NOT NULL,
+  `jam_mulai` time DEFAULT NULL,
+  `jam_selesai` time DEFAULT NULL,
   `status` enum('Menunggu','Dikonfirmasi','Dibatalkan','Selesai') DEFAULT 'Menunggu',
   `catatan` text DEFAULT NULL,
   `dibuat_pada` datetime DEFAULT current_timestamp(),
@@ -139,9 +175,9 @@ CREATE TABLE `data_penjadwalan` (
 -- Dumping data for table `data_penjadwalan`
 --
 
-INSERT INTO `data_penjadwalan` (`id_penjadwalan`, `id_user`, `id_rs`, `id_layanan`, `no_nik`, `nama_pasien`, `tanggal_kunjungan`, `status`, `catatan`, `dibuat_pada`, `queue_number`) VALUES
-(1, 1, 1, 1, '1234567890123456', 'Budi Santoso', '2025-12-04', 'Dikonfirmasi', 'Catatan contoh', '2025-12-03 14:36:32', 'F-001'),
-(4, 1, 1, 2, '3173051234567890', 'Budi Santoso', '2025-12-20', 'Menunggu', 'Pemeriksaan lanjutan onkologi', '2025-12-10 11:19:37', 'F-004');
+INSERT INTO `data_penjadwalan` (`id_penjadwalan`, `id_user`, `id_rs`, `id_layanan`, `no_nik`, `nama_pasien`, `tanggal_kunjungan`, `jam_mulai`, `jam_selesai`, `status`, `catatan`, `dibuat_pada`, `queue_number`) VALUES
+(1, 1, 1, 1, '1234567890123456', 'Budi Santoso', '2025-12-04', NULL, NULL, 'Dikonfirmasi', 'Catatan contoh', '2025-12-03 14:36:32', 'F-001'),
+(4, 1, 1, 2, '3173051234567890', 'Budi Santoso', '2025-12-20', NULL, NULL, 'Menunggu', 'Pemeriksaan lanjutan onkologi', '2025-12-10 11:19:37', 'F-004');
 
 -- --------------------------------------------------------
 
@@ -197,6 +233,13 @@ ALTER TABLE `akun_user`
   ADD UNIQUE KEY `email` (`email`);
 
 --
+-- Indexes for table `data_jadwal_layanan`
+--
+ALTER TABLE `data_jadwal_layanan`
+  ADD PRIMARY KEY (`id_jadwal`),
+  ADD KEY `id_layanan` (`id_layanan`);
+
+--
 -- Indexes for table `data_layanan_rs`
 --
 ALTER TABLE `data_layanan_rs`
@@ -244,6 +287,12 @@ ALTER TABLE `akun_user`
   MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `data_jadwal_layanan`
+--
+ALTER TABLE `data_jadwal_layanan`
+  MODIFY `id_jadwal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
 -- AUTO_INCREMENT for table `data_layanan_rs`
 --
 ALTER TABLE `data_layanan_rs`
@@ -270,6 +319,12 @@ ALTER TABLE `data_rumah_sakit`
 --
 ALTER TABLE `akun_rumah_sakit`
   ADD CONSTRAINT `akun_rumah_sakit_ibfk_1` FOREIGN KEY (`id_rs`) REFERENCES `data_rumah_sakit` (`id_rs`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `data_jadwal_layanan`
+--
+ALTER TABLE `data_jadwal_layanan`
+  ADD CONSTRAINT `data_jadwal_layanan_ibfk_1` FOREIGN KEY (`id_layanan`) REFERENCES `data_layanan_rs` (`id_layanan`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `data_layanan_rs`

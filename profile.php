@@ -321,7 +321,7 @@ unset($_SESSION['msg_content']);
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Password Baru</label>
                             <input type="password" name="password_baru" id="password_baru" required minlength="6"
                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                                   placeholder="Masukkan password baru (min. 6 karakter)">
+                                   placeholder="Masukkan password baru (min. 8 karakter)">
                         </div>
 
                         <!-- Konfirmasi Password Baru -->
@@ -339,7 +339,7 @@ unset($_SESSION['msg_content']);
                                 <div>
                                     <p class="text-xs font-bold text-yellow-800 mb-1">Syarat Password:</p>
                                     <ul class="text-xs text-yellow-700 space-y-1">
-                                        <li>• Minimal 6 karakter</li>
+                                        <li>• Minimal 8 karakter</li>
                                         <li>• Disarankan kombinasi huruf, angka, dan simbol</li>
                                     </ul>
                                 </div>
@@ -418,8 +418,8 @@ unset($_SESSION['msg_content']);
                 return false;
             }
             
-            if (passwordBaru.length < 6) {
-                alert('Password baru minimal 6 karakter!');
+            if (passwordBaru.length < 8) {
+                alert('Password baru minimal 8 karakter!');
                 return false;
             }
             

@@ -162,9 +162,26 @@ $query_rs = mysqli_query($conn, "SELECT * FROM data_rumah_sakit ORDER BY nama_rs
                                         <i class="fa-solid fa-calendar-day text-blue-500 text-xs"></i>
                                         Tanggal Kunjungan
                                     </label>
-                                    <input type="date" name="tanggal_kunjungan" required min="<?= date('Y-m-d') ?>"
-                                        class="w-full px-4 py-3 rounded-lg bg-gray-50 border-2 border-gray-200 focus:border-blue-500 focus:bg-white focus:ring-0 text-gray-700 text-sm transition-all">
+                                    <input type="date" name="tanggal_kunjungan" id="tanggal_kunjungan" required 
+                                        min="<?= date('Y-m-d') ?>"
+                                        class="w-full px-4 py-3 rounded-lg bg-gray-50 border-2 border-gray-200 focus:border-blue-500 focus:bg-white text-gray-700 text-sm transition-all">
                                 </div>
+                            </div>
+
+                            <div id="wrapper_sesi" class="space-y-2">
+                                <label class="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                    <i class="fa-regular fa-clock text-blue-500 text-xs"></i>
+                                    Pilih Sesi Kunjungan
+                                </label>
+                                
+                                <div id="grid_sesi" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                    <div class="col-span-full text-center text-gray-400 text-sm py-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+                                        <i class="fa-regular fa-calendar-xmark text-2xl mb-2"></i>
+                                        <p>Pilih layanan dan tanggal terlebih dahulu</p>
+                                    </div>
+                                </div>
+                                
+                                <input type="hidden" name="jam_mulai" id="jam_mulai" required>
                             </div>
 
                             <div class="space-y-2">
@@ -178,10 +195,10 @@ $query_rs = mysqli_query($conn, "SELECT * FROM data_rumah_sakit ORDER BY nama_rs
                             </div>
 
                             <div class="pt-4 border-t border-gray-200">
-                                <button type="submit" 
+                                <button type="submit" id="btnSubmitBooking"
                                         class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 px-6 rounded-lg shadow-lg transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-3">
                                     <i class="fa-solid fa-paper-plane"></i>
-                                    Konfirmasi Jadwal Kunjungan
+                                    <span>Konfirmasi Jadwal Kunjungan</span>
                                 </button>
                                 <p class="text-center text-xs text-gray-500 mt-4 flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-shield-halved text-green-500"></i>
@@ -193,8 +210,209 @@ $query_rs = mysqli_query($conn, "SELECT * FROM data_rumah_sakit ORDER BY nama_rs
                 </div>                
             </div>
         </div>
+        
+        <!-- Modal Booking Berhasil -->
+        <div id="modalBookingBerhasil" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+            <div class="bg-white/95 backdrop-blur-md w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row animate-scale-in">
+                
+                <!-- Left Side - Image -->
+                <div class="w-full lg:w-5/12 relative min-h-[200px] lg:min-h-full bg-[#1e3a8a]">
+                    <img src="assets/img/rumahsakit_bg.png" alt="Hospital Building" class="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-overlay">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#1e3a8a]/90 to-transparent"></div>
+                    
+                    <div class="absolute top-8 left-8 z-20">
+                        <h1 class="text-3xl font-bold text-white leading-tight drop-shadow-md">
+                            Pengajuan <br>Kunjungan
+                        </h1>
+                    </div>
+                </div>
+
+                <!-- Right Side - Content -->
+                <div class="w-full lg:w-7/12 p-8 lg:p-12 flex flex-col items-center justify-center text-center bg-gray-50/50 relative">
+                    
+                    <!-- Close Button -->
+                    <button onclick="closeModalBooking()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition-all">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                    
+                    <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mb-6 animate-bounce-slow border-4 border-green-100">
+                        <i class="fa-solid fa-check text-4xl text-green-500"></i>
+                    </div>
+
+                    <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mb-2 uppercase tracking-wide">
+                        PENDAFTARAN BERHASIL
+                    </h2>
+                    
+                    <p class="text-gray-500 mb-8 max-w-md">
+                        Nomor antrian Anda akan dikirimkan melalui WhatsApp dan dapat dicek pada menu Riwayat.
+                    </p>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 w-full max-w-md mb-8 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
+                        <div class="grid grid-cols-2 gap-y-4 text-left text-sm">
+                            
+                            <div>
+                                <span class="block text-gray-400 text-xs font-bold uppercase mb-1">RS Tujuan</span>
+                                <span id="modalRsName" class="font-bold text-gray-800 text-base block truncate pr-2">-</span>
+                            </div>
+
+                            <div class="text-right">
+                                <span class="block text-gray-400 text-xs font-bold uppercase mb-1">Layanan</span>
+                                <span id="modalLayananName" class="font-bold text-gray-800 text-base">-</span>
+                            </div>
+
+                            <div class="col-span-2 border-t border-gray-100 my-1"></div>
+
+                            <div>
+                                <span class="block text-gray-400 text-xs font-bold uppercase mb-1">Tanggal</span>
+                                <span id="modalTanggal" class="font-bold text-gray-800 text-base">-</span>
+                            </div>
+
+                            <div class="text-right">
+                                <span class="block text-gray-400 text-xs font-bold uppercase mb-1">Status</span>
+                                <span class="inline-block px-3 py-1 bg-yellow-50 text-yellow-600 border border-yellow-100 text-xs font-bold rounded-lg">
+                                    MENUNGGU
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+                        <a href="index.php" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-green-500/20 transition-all hover:-translate-y-1 text-center flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-house"></i> Dashboard
+                        </a>
+                        
+                        <a href="riwayat_pengajuan.php" class="flex-1 bg-white border-2 border-gray-200 hover:border-blue-600 text-gray-600 hover:text-blue-600 font-bold py-3 px-6 rounded-xl transition-all text-center flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-clock-rotate-left"></i> Riwayat
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
         <?php include 'includes/footer.php'; ?>
     </main>
+    
+    <style>
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes scale-in {
+            from { 
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to { 
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out;
+        }
+        
+        .animate-scale-in {
+            animation: scale-in 0.3s ease-out;
+        }
+        
+        .animate-bounce-slow {
+            animation: bounce-slow 2s ease-in-out infinite;
+        }
+    </style>
+    
     <script src="assets/js/script.js"></script>
+    <script>
+        // Handle form submission dengan AJAX
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('btnSubmitBooking');
+            const originalContent = submitBtn.innerHTML;
+            
+            // Disable button dan ubah text
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><span>Memproses...</span>';
+            
+            // Kirim data via AJAX
+            const formData = new FormData(this);
+            
+            fetch('api/booking/create.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    // Tampilkan modal dengan data
+                    showModalBooking(data.data);
+                    
+                    // Reset form
+                    this.reset();
+                    document.getElementById('grid_sesi').innerHTML = `
+                        <div class="col-span-full text-center text-gray-400 text-sm py-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+                            <i class="fa-regular fa-calendar-xmark text-2xl mb-2"></i>
+                            <p>Pilih layanan dan tanggal terlebih dahulu</p>
+                        </div>
+                    `;
+                } else {
+                    // Tampilkan error
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat memproses booking. Silakan coba lagi.');
+            })
+            .finally(() => {
+                // Enable button kembali
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalContent;
+            });
+        });
+        
+        function showModalBooking(data) {
+            // Format tanggal
+            const date = new Date(data.tanggal);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = date.toLocaleDateString('id-ID', options);
+            
+            // Isi data ke modal
+            document.getElementById('modalRsName').textContent = data.rs_name;
+            document.getElementById('modalLayananName').textContent = data.layanan_name;
+            document.getElementById('modalTanggal').textContent = formattedDate;
+            
+            // Tampilkan modal
+            document.getElementById('modalBookingBerhasil').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModalBooking() {
+            document.getElementById('modalBookingBerhasil').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close modal dengan ESC key
+        document.addEventListener('keydown', function(e) {
+            if(e.key === 'Escape') {
+                closeModalBooking();
+            }
+        });
+        
+        // Close modal dengan click outside
+        document.getElementById('modalBookingBerhasil').addEventListener('click', function(e) {
+            if(e.target === this) {
+                closeModalBooking();
+            }
+        });
+    </script>
 </body>
 </html>

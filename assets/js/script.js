@@ -322,6 +322,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Cari elemen dropdown RS
     const rsSelect = document.getElementById('id_rs');
+    const layananSelect = document.getElementById('id_layanan');
+    const tanggalInput = document.getElementById('tanggal_kunjungan');
 
     // Cek apakah kita sedang berada di halaman booking
     if (rsSelect) {
@@ -339,7 +341,143 @@ document.addEventListener('DOMContentLoaded', function() {
             loadLayanan(this.value);
         });
     }
+
+    // Event Listener untuk Dropdown Layanan
+    if (layananSelect) {
+        layananSelect.addEventListener('change', function() {
+            console.log('🔄 Layanan berubah:', this.value);
+            // Jika tanggal sudah diisi, load sesi otomatis
+            if (tanggalInput && tanggalInput.value) {
+                console.log('📅 Tanggal sudah ada, memanggil loadSesi()');
+                loadSesi();
+            } else {
+                console.log('⚠️ Tanggal belum dipilih');
+            }
+        });
+    }
+
+    // Event Listener untuk Input Tanggal
+    if (tanggalInput) {
+        tanggalInput.addEventListener('change', function() {
+            console.log('📅 Tanggal berubah:', this.value);
+            // Jika layanan sudah dipilih, load sesi otomatis
+            if (layananSelect && layananSelect.value) {
+                console.log('🔄 Layanan sudah ada, memanggil loadSesi()');
+                loadSesi();
+            } else {
+                console.log('⚠️ Layanan belum dipilih');
+            }
+        });
+    }
 });
+
+/**
+ * Fungsi Load Sesi Jadwal (2 Jam)
+ */
+function loadSesi() {
+    console.log('🔍 loadSesi() dipanggil');
+    
+    const idLayanan = document.getElementById('id_layanan').value;
+    const tanggal = document.getElementById('tanggal_kunjungan').value;
+    const wrapper = document.getElementById('wrapper_sesi');
+    const container = document.getElementById('grid_sesi');
+    const inputJam = document.getElementById('jam_mulai');
+
+    console.log('📋 Data:', { idLayanan, tanggal, wrapper, container, inputJam });
+
+    // Validasi sederhana
+    if (!idLayanan || !tanggal) {
+        console.warn('⚠️ Validasi gagal - idLayanan atau tanggal kosong');
+        return;
+    }
+
+    console.log('✅ Validasi berhasil, memuat sesi...');
+
+    // Reset UI - Langsung tampilkan loading
+    container.innerHTML = '<div class="col-span-full text-center text-gray-500 text-xs py-2"><i class="fa-solid fa-spinner fa-spin"></i> Mengecek jadwal...</div>';
+    inputJam.value = ''; // Reset pilihan
+
+    // Panggil API
+    const apiUrl = `api/booking/get_slots.php?id_layanan=${idLayanan}&tanggal=${tanggal}`;
+    console.log('🌐 Memanggil API:', apiUrl);
+    
+    fetch(apiUrl)
+        .then(response => {
+            console.log('📡 Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('📦 Data received:', data);
+            container.innerHTML = ''; // Bersihkan loading
+
+            // Cek jika API mengembalikan error (misal hari libur)
+            if (data.error) {
+                container.innerHTML = `<div class="col-span-full text-center text-red-500 text-sm bg-red-50 p-2 rounded-lg border border-red-100">${data.message}</div>`;
+                return;
+            }
+
+            // Cek jika array kosong
+            if (data.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center text-gray-500 text-sm">Tidak ada jadwal tersedia.</div>';
+                return;
+            }
+
+            // Loop dan buat tombol
+            data.forEach(slot => {
+                const btn = document.createElement('button');
+                btn.type = 'button'; // Wajib button type button agar tidak submit form
+                
+                // Styling berdasarkan ketersediaan
+                if (slot.sisa > 0) {
+                    btn.className = 'border-2 border-blue-100 bg-white hover:border-blue-500 hover:bg-blue-50 text-gray-700 rounded-xl p-3 transition-all text-center group';
+                    
+                    // Simpan jam_mulai sebagai data attribute
+                    btn.setAttribute('data-jam-mulai', slot.jam_mulai);
+                    
+                    btn.onclick = function() {
+                        console.log('🕐 Slot dipilih:', this.getAttribute('data-jam-mulai'));
+                        
+                        // Hapus status aktif dari semua tombol
+                        document.querySelectorAll('#grid_sesi button').forEach(b => {
+                            b.classList.remove('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-200');
+                            b.classList.add('border-blue-100', 'bg-white');
+                        });
+                        
+                        // Set status aktif ke tombol ini
+                        this.classList.remove('border-blue-100', 'bg-white');
+                        this.classList.add('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-200');
+                        
+                        // Simpan nilai ke input hidden
+                        const jamMulai = this.getAttribute('data-jam-mulai');
+                        inputJam.value = jamMulai;
+                        console.log('✅ Input jam_mulai diisi:', jamMulai);
+                    };
+                } else {
+                    // Styling jika Penuh
+                    btn.className = 'border border-gray-200 bg-gray-100 text-gray-400 rounded-xl p-3 cursor-not-allowed text-center opacity-60';
+                    btn.disabled = true;
+                }
+
+                btn.innerHTML = `
+                    <div class="font-bold text-sm mb-1">${slot.label}</div>
+                    <div class="text-xs flex flex-col items-center gap-1">
+                        <span>${slot.status}</span>
+                        <span class="font-semibold ${slot.sisa > 0 ? 'text-green-600' : 'text-red-500'}">
+                            ${slot.sisa} Kuota
+                        </span>
+                    </div>
+                `;
+                
+                container.appendChild(btn);
+            });
+            
+            console.log('✅ Berhasil membuat', data.length, 'tombol slot waktu');
+        })
+        .catch(err => {
+            console.error('❌ Error:', err);
+            container.innerHTML = '<div class="col-span-full text-red-500 text-xs">Gagal memuat jadwal.</div>';
+        });
+}
 
 // =================================================================
 // LOGIKA MODAL DETAIL KUNJUNGAN (Floating Window)
