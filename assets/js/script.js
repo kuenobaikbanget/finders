@@ -241,11 +241,181 @@ function closeModal() {
     }
 }
 
+/**
+ * Fungsi untuk membuka Modal Jadwal Layanan RS
+ * @param {integer} id - ID Rumah Sakit
+ */
+function openJadwal(id) {
+    const overlay = document.getElementById('modalOverlay');
+    const content = document.getElementById('modalContent');
+    
+    console.log('Opening jadwal for RS ID:', id);
+    
+    if (overlay) {
+        overlay.classList.remove('hidden');
+    }
+    
+    if (content) {
+        // Show loading spinner
+        content.innerHTML = `
+            <div class="bg-white p-6 rounded-2xl shadow-xl flex items-center gap-3 animate-pulse">
+                <div class="w-6 h-6 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                <span class="font-medium text-gray-600">Memuat jadwal...</span>
+            </div>
+        `;
+
+        // Fetch RS info first
+        const rsUrl = 'rs_jadwal.php?id=' + id;
+        console.log('Fetching RS jadwal template from:', rsUrl);
+        
+        fetch(rsUrl)
+            .then(response => response.text())
+            .then(html => {
+                // Insert HTML without script
+                content.innerHTML = html;
+                
+                // Now fetch and populate jadwal data
+                const apiUrl = '/finders/api/booking/get_jadwal_rs.php?id_rs=' + id;
+                console.log('Fetching jadwal data from:', apiUrl);
+                
+                return fetch(apiUrl);
+            })
+            .then(response => {
+                console.log('Jadwal API response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Jadwal data received:', data);
+                
+                const loading = document.getElementById('jadwalLoading');
+                const jadwalContent = document.getElementById('jadwalContent');
+                const empty = document.getElementById('jadwalEmpty');
+                
+                if (loading) loading.classList.add('hidden');
+                
+                // Check if data is empty or error
+                if (data.error || Object.keys(data).length === 0) {
+                    console.log('No jadwal data or error:', data.error);
+                    if (empty) empty.classList.remove('hidden');
+                    return;
+                }
+                
+                // Build HTML
+                let html = '';
+                
+                for (const [kategori, layananList] of Object.entries(data)) {
+                    html += `
+                        <div class="mb-8">
+                            <h2 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-blue-500 flex items-center gap-2">
+                                <i class="fa-solid fa-stethoscope text-blue-600"></i>
+                                ${kategori}
+                            </h2>
+                    `;
+                    
+                    for (const [namaLayanan, info] of Object.entries(layananList)) {
+                        html += `
+                            <div class="mb-6 bg-gradient-to-r from-blue-50 to-white p-4 rounded-xl border border-blue-100">
+                                <h3 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-hospital-user text-finders-blue"></i>
+                                    ${namaLayanan}
+                                </h3>
+                        `;
+                        
+                        if (info.jadwal && info.jadwal.length > 0) {
+                            html += '<div class="grid grid-cols-1 md:grid-cols-2 gap-3">';
+                            
+                            info.jadwal.forEach(j => {
+                                html += `
+                                    <div class="bg-white p-3 rounded-lg border border-gray-200 hover:border-blue-400 transition">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                                <span class="font-semibold text-gray-700">${j.hari}</span>
+                                            </div>
+                                            <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
+                                                <i class="fa-solid fa-users text-xs"></i> ${j.kuota} slot/sesi
+                                            </span>
+                                        </div>
+                                        <div class="mt-2 flex items-center gap-2 text-sm text-gray-600">
+                                            <i class="fa-regular fa-clock text-gray-400"></i>
+                                            <span>${j.jam_buka} - ${j.jam_tutup}</span>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                            
+                            html += '</div>';
+                        } else {
+                            html += `
+                                <div class="bg-gray-50 p-3 rounded-lg text-center">
+                                    <p class="text-gray-400 text-sm italic">
+                                        <i class="fa-solid fa-info-circle"></i> Jadwal belum tersedia
+                                    </p>
+                                </div>
+                            `;
+                        }
+                        
+                        html += '</div>';
+                    }
+                    
+                    html += '</div>';
+                }
+                
+                console.log('Setting jadwal content, HTML length:', html.length);
+                if (jadwalContent) {
+                    jadwalContent.innerHTML = html;
+                    jadwalContent.classList.remove('hidden');
+                    console.log('Jadwal content displayed successfully!');
+                }
+            })
+            .catch(err => {
+                console.error('Error loading jadwal:', err);
+                content.innerHTML = `
+                    <div class="bg-white p-6 rounded-xl max-w-md">
+                        <div class="text-center">
+                            <i class="fa-solid fa-calendar-xmark text-6xl text-red-300 mb-4"></i>
+                            <h3 class="text-lg font-bold text-gray-600 mb-2">Gagal Memuat Jadwal</h3>
+                            <p class="text-gray-500 text-sm mb-2">Terjadi kesalahan saat memuat data jadwal.</p>
+                            <p class="text-red-500 text-xs font-mono mb-4">${err.message}</p>
+                            <button onclick="closeModal()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition">
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+    }
+}
+
+// =================================================================
+// EXPOSE FUNCTIONS TO GLOBAL SCOPE (Immediately)
+// =================================================================
+// Pastikan fungsi tersedia secara global untuk onclick handlers
+window.openJadwal = openJadwal;
+window.openDetail = openDetail;
+window.closeModal = closeModal;
+
+console.log('Functions exposed to window:', {
+    openJadwal: typeof window.openJadwal,
+    openDetail: typeof window.openDetail,
+    closeModal: typeof window.closeModal
+});
+
 // =================================================================
 // EVENT LISTENERS (PENGINTAI AKSI USER)
 // =================================================================
 
 document.addEventListener('DOMContentLoaded', function() {
+    
+    // Re-expose functions to ensure they're available
+    window.openJadwal = openJadwal;
+    window.openDetail = openDetail;
+    window.closeModal = closeModal;
+    
+    console.log('DOMContentLoaded: Functions re-exposed');
     
     // Event Listener untuk tombol Keyboard
     document.addEventListener('keydown', function(event) {

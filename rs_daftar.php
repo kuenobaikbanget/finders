@@ -150,5 +150,39 @@ $result = mysqli_query($conn, $query_sql);
     </div>
 
     <script src="assets/js/script.js"></script>
+    
+    <script>
+    // Fallback jika fungsi belum tersedia dari script.js
+    if (typeof openJadwal === 'undefined') {
+        console.warn('openJadwal not found in script.js, defining fallback');
+        window.openJadwal = function(id) {
+            const overlay = document.getElementById('modalOverlay');
+            const content = document.getElementById('modalContent');
+            
+            if (overlay) {
+                overlay.classList.remove('hidden');
+            }
+            
+            if (content) {
+                content.innerHTML = `
+                    <div class="bg-white p-6 rounded-2xl shadow-xl flex items-center gap-3 animate-pulse">
+                        <div class="w-6 h-6 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                        <span class="font-medium text-gray-600">Memuat jadwal...</span>
+                    </div>
+                `;
+
+                fetch('rs_jadwal.php?id=' + id)
+                    .then(response => response.text())
+                    .then(html => {
+                        content.innerHTML = html;
+                    })
+                    .catch(err => {
+                        console.error('Error:', err);
+                        content.innerHTML = '<div class="bg-white p-4 rounded-xl text-red-500">Gagal memuat jadwal. Silakan coba lagi.</div>';
+                    });
+            }
+        };
+    }
+    </script>
 </body>
 </html>

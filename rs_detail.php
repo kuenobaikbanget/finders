@@ -136,11 +136,11 @@ if(!$query_layanan) {
 
         <!-- Footer Actions -->
         <div class="p-6 border-t border-gray-100 bg-gray-50 flex gap-3 shrink-0">
-            <button onclick="alert('Fitur jadwal akan segera hadir!')" class="flex-1 bg-white border border-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-xl text-center transition hover:bg-gray-50 hover:border-gray-300 flex items-center justify-center gap-2 text-sm cursor-pointer">
-                <i class="fa-regular fa-calendar-days"></i> Lihat Jadwal
+            <button onclick="openJadwal(<?= $rs['id_rs'] ?>)" class="flex-1 bg-white border border-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-xl text-center transition hover:bg-gray-50 hover:border-gray-300 flex items-center justify-center gap-2 text-sm cursor-pointer">
+                Lihat Jadwal
             </button>
             <a href="booking.php?rs_id=<?= $rs['id_rs'] ?>" class="flex-1 bg-finders-green hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-xl text-center transition shadow-lg shadow-green-200 flex items-center justify-center gap-2 text-sm">
-                <i class="fa-solid fa-stethoscope"></i> Buat Janji
+                Buat Janji
             </a>
         </div>
 
