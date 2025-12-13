@@ -18,6 +18,15 @@ $id_user = $_SESSION['user_id'];
 $query_user = mysqli_query($conn, "SELECT * FROM akun_user WHERE id_user = '$id_user'");
 $user = mysqli_fetch_array($query_user);
 
+// Jika rs_id ada di URL, validasi apakah ID tersebut ada di database
+if(!empty($selected_rs_id)) {
+    $check_rs = mysqli_query($conn, "SELECT id_rs FROM data_rumah_sakit WHERE id_rs = '$selected_rs_id'");
+    if(!$check_rs || mysqli_num_rows($check_rs) == 0) {
+        header("Location: errors/404.php");
+        exit;
+    }
+}
+
 // Ambil List Rumah Sakit
 $query_rs = mysqli_query($conn, "SELECT * FROM data_rumah_sakit ORDER BY nama_rs ASC");
 ?>

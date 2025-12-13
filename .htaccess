@@ -1,0 +1,29 @@
+# Aktifkan Error Handling
+ErrorDocument 404 /finders/errors/404.php
+ErrorDocument 403 /finders/errors/403.php
+
+# Redirect ke 404 untuk file yang tidak ada
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Jika file atau direktori tidak ada, redirect ke 404
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    # Kecualikan beberapa path yang valid
+    RewriteCond %{REQUEST_URI} !^/finders/errors/
+    RewriteCond %{REQUEST_URI} !^/finders/api/
+    RewriteCond %{REQUEST_URI} !^/finders/assets/
+    RewriteRule ^(.*)$ errors/404.php [L]
+</IfModule>
+
+# Keamanan tambahan
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Mencegah directory browsing
+Options -Indexes
+
+# Encoding UTF-8
+AddDefaultCharset UTF-8

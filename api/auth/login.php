@@ -27,12 +27,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $redirect_url = $_SESSION['redirect_after_login'];
                 unset($_SESSION['redirect_after_login']); // Hapus session redirect
                 
-                // Pastikan URL dimulai dengan / untuk path relatif dari root
-                if(strpos($redirect_url, '/') !== 0) {
-                    $redirect_url = '/' . $redirect_url;
+                // Jika URL sudah lengkap dengan path /finders/, gunakan langsung
+                // Jika tidak, tambahkan prefix ../../
+                if(strpos($redirect_url, '/finders/') === 0) {
+                    // URL sudah lengkap, ambil bagian setelah /finders/
+                    $redirect_url = str_replace('/finders/', '', $redirect_url);
+                    header("Location: ../../$redirect_url");
+                } else {
+                    // URL relatif, gunakan langsung
+                    header("Location: ../../$redirect_url");
                 }
-                
-                header("Location: ../..$redirect_url");
             } else {
                 header("Location: ../../index.php");
             }
@@ -53,6 +57,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['admin_name'] = $data['username'];
             $_SESSION['role'] = $data['role'];
 
+            // Redirect ke halaman yang dituju sebelumnya (jika ada dan halaman admin)
+            if(isset($_SESSION['redirect_after_login'])) {
+                $redirect_url = $_SESSION['redirect_after_login'];
+                
+                // Cek apakah redirect URL adalah halaman admin
+                if(strpos($redirect_url, '/admin/') !== false || strpos($redirect_url, 'admin/') !== false) {
+                    unset($_SESSION['redirect_after_login']); // Hapus session redirect
+                    
+                    // Jika URL sudah lengkap dengan path /finders/, gunakan langsung
+                    if(strpos($redirect_url, '/finders/') === 0) {
+                        // URL sudah lengkap, ambil bagian setelah /finders/
+                        $redirect_url = str_replace('/finders/', '', $redirect_url);
+                        header("Location: ../../$redirect_url");
+                    } else {
+                        // URL relatif, gunakan langsung
+                        header("Location: ../../$redirect_url");
+                    }
+                    exit;
+                }
+            }
+            
+            // Default redirect ke admin dashboard
             header("Location: ../../admin/index.php");
             exit;
         }

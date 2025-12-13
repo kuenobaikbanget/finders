@@ -5,6 +5,8 @@ include 'config/db_connect.php';
 
 // 1. Cek Login
 if(!isset($_SESSION['user_id'])) {
+    // Simpan URL tujuan untuk redirect setelah login
+    $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
     header("Location: login.php");
     exit;
 }

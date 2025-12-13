@@ -9,7 +9,7 @@ if(!isset($conn)) {
 $id_rs = $_GET['id'] ?? null;
 
 if(!$id_rs) {
-    echo '<div class="p-4 text-red-500 bg-white rounded-xl">ID Rumah Sakit tidak ditemukan.</div>';
+    header("Location: errors/404.php");
     exit;
 }
 
@@ -17,7 +17,7 @@ if(!$id_rs) {
 $query_rs = mysqli_query($conn, "SELECT * FROM data_rumah_sakit WHERE id_rs = '$id_rs'");
 
 if(!$query_rs || mysqli_num_rows($query_rs) == 0) {
-    echo '<div class="p-4 text-red-500 bg-white rounded-xl">Data Rumah Sakit tidak ditemukan.</div>';
+    header("Location: errors/404.php");
     exit;
 }
 

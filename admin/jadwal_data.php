@@ -4,6 +4,8 @@ require_once '../config/db_connect.php';
 
 // Cek Login Admin
 if(!isset($_SESSION['admin_id'])) {
+    // Simpan URL tujuan untuk redirect setelah login
+    $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
     header("Location: ../login.php");
     exit;
 }
