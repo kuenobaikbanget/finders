@@ -135,7 +135,8 @@ $result = mysqli_query($conn, $query_sql);
         <?php endif; ?>
         
         </div>
-        <!-- End Content Section -->
+        
+        <?php include 'includes/footer.php'; ?>
 
     </main>
 
@@ -184,5 +185,6 @@ $result = mysqli_query($conn, $query_sql);
         };
     }
     </script>
+    
 </body>
 </html>

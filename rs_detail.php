@@ -68,9 +68,7 @@ if(!$query_layanan) {
                 <h1 class="text-2xl font-bold text-gray-800 leading-tight">
                     <?= htmlspecialchars($rs['nama_rs']) ?>
                 </h1>
-                <button class="text-gray-300 hover:text-red-500 transition-colors">
-                    <i class="fa-solid fa-bookmark text-2xl"></i>
-                </button>
+                <button class="text-gray-300 hover:text-red-500 transition-colors"></button>
             </div>
 
             <!-- Info Grid -->

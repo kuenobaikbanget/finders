@@ -225,13 +225,13 @@ include 'config/db_connect.php';
                             </p>
                             
                             <div class="flex items-center gap-2 pt-4 border-t border-gray-100">
-                                <a href="booking.php?rs_id=<?= $d['id_rs'] ?>" class="flex-1 bg-finders-green hover:bg-green-600 text-white text-xs font-bold py-2.5 rounded-xl text-center transition uppercase tracking-wide shadow-sm flex items-center justify-center gap-2">
-                                    <i class="fa-regular fa-calendar-check"></i> Jadwalkan
-                                </a>
-                                
                                 <button onclick="openDetail(<?= $d['id_rs'] ?>)" class="flex-1 bg-blue-50 text-finders-blue text-xs font-bold py-2.5 rounded-xl hover:bg-[#1e3a8a] hover:text-white transition uppercase tracking-wide cursor-pointer shadow-sm">
                                     Detail
                                 </button>
+                                
+                                <a href="booking.php?rs_id=<?= $d['id_rs'] ?>" class="flex-1 bg-finders-green hover:bg-green-600 text-white text-xs font-bold py-2.5 rounded-xl text-center transition uppercase tracking-wide shadow-sm flex items-center justify-center gap-2">
+                                    Buat Janji
+                                </a>
                             </div>
                         </div>
                     </div>

@@ -13,13 +13,13 @@
                     Platform pencarian rumah sakit dan layanan kesehatan terintegrasi di Indonesia.
                 </p>
                 <div class="flex items-center gap-3">
-                    <a href="#" class="w-10 h-10 bg-blue-100 text-finders-blue rounded-full flex items-center justify-center hover:bg-finders-green hover:text-white transition-all duration-300 transform hover:scale-110">
+                    <a href="#" class="w-10 h-10 bg-blue-100 text-finders-blue rounded-full flex items-center justify-center hover:bg-blue-200 transition-all duration-300 transform hover:scale-110">
                         <i class="fa-brands fa-facebook-f"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 bg-blue-100 text-finders-blue rounded-full flex items-center justify-center hover:bg-finders-green hover:text-white transition-all duration-300 transform hover:scale-110">
+                    <a href="#" class="w-10 h-10 bg-blue-100 text-finders-blue rounded-full flex items-center justify-center hover:bg-blue-200 transition-all duration-300 transform hover:scale-110">
                         <i class="fa-brands fa-twitter"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 bg-blue-100 text-finders-blue rounded-full flex items-center justify-center hover:bg-finders-green hover:text-white transition-all duration-300 transform hover:scale-110">
+                    <a href="#" class="w-10 h-10 bg-blue-100 text-finders-blue rounded-full flex items-center justify-center hover:bg-blue-200 transition-all duration-300 transform hover:scale-110">
                         <i class="fa-brands fa-instagram"></i>
                     </a>
                 </div>
